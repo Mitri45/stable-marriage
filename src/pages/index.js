@@ -76,7 +76,8 @@ export default function Home ({ data }) {
       tag="div" 
       list={state} 
       setList={setState} 
-      animation={"2500"}>
+      swap 
+      swapClass={"sortable-swap-highlight"}>
       {state.map((item, index) => (
        <UserCard key={item.node.id}>
        <StyledImg

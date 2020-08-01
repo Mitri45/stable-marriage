@@ -1,76 +1,81 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import Layout from "../components/layout"
-import Img from "gatsby-image"
-import { graphql } from 'gatsby'
-import reorderImg from "../images/reorder-black-18dp.svg"
-import { ReactSortable, Swap, Sortable  } from "react-sortablejs";
+import Layout from "../components/Layout"
+import { Link, navigate, useStaticQuery, graphql } from 'gatsby'
+import { authenticateUser } from "../utils/userAuthenticate"
 
-Sortable.mount(new Swap());
+//Styles for the page
 
 const StyledHeader = styled.h1`
     text-align: center;
     font-size: 1.5rem;
-
-`
-const CardsWrapper = styled(ReactSortable)`
-    display: flex;
-    flex-flow: column nowrap;
-    width: 90%;
-    margin: 0 auto;
-  
 `
 
-const UserCard = styled.div`
-    
-    max-height: 100px;
-    border: 1px solid #EEEEEE;
-    box-shadow: 4px 3px 3px 0px rgba(178,174,193,0.71);
-    
-    display: grid;
-    grid-template-areas:"avatar name name" 
-                        "avatar title rating";
-    grid-template-rows: 50px 50px;
-    grid-template-columns: 110px 1fr 0.8fr;
-    justify-items: start;
-    align-items: start;
-    margin-bottom: 1em;
 
-    &.sortable-swap-highlight {
-      background-color: #f9c7c8;
+export default function Home() {
+
+  const [userEmail, setUserEmail] = useState('')
+  const [user, setUser] = useState({mentor: ''})
+console.log(userEmail);
+
+// onClick event handler that stores user role to localStorage
+  const saveToLocalStorage = () => {
+    localStorage.setItem('userRole', JSON.stringify({mentor: true}))
+  }
+
+// If user role is in localStorage redirect to ranking page
+  useEffect(() => {
+    if (localStorage.getItem('userRole')) {
+      const userRole = JSON.parse(localStorage.getItem('userRole'))
+      navigate("/ranking",
+      {
+        state: { userRole },
+      })
     }
-`
-const StyledImg = styled(Img)`
-    max-width: 90px;
-    max-height: 90px;
-    border-radius: 50%;
-    grid-area: avatar; 
-    align-self: center;
-    justify-self: center;
-`
-const UserName = styled.h2`
-    grid-area: name; 
-    font-size: 1.2rem;
+  });
 
-`
-const UserTitle = styled.p`
-    grid-area: title; 
+const handleSubmit = e => {
+  e.preventDefault()
+  const processedEmail = userEmail.trim().toLocaleLowerCase()
+  console.log(processedEmail)
+  const validUser = authenticateUser(processedEmail, userAuthData)
+  if (validUser) {
+    navigate("/ranking",
+    {
+      state: { validUser },
+    })
+  } else {
+    document.getElementById("userNotFound").innerText = "User not found"
+  }
+}
 
-`
-const UserRating = styled.div`
-    grid-area: rating; 
-
-`
-
-export default function Home ({ data }) {
- 
-  const userData = data.dataQuery.edges
-  const [state, setState] = useState(userData);
-
+const userAuthData = useStaticQuery(graphql`
+query {
+    mentees: allMenteesJson {
+        edges {
+        node {
+            id
+            email: Email
+            name: First_Name
+            }
+        }
+    }
+    mentors: allMentorsJson {
+        edges {
+            node {
+            id
+            name: First_Name
+            email: Email
+            }
+        }
+    }
+}
+`)
 
   return (
     <Layout>
       <StyledHeader>Hello world!</StyledHeader>
+<<<<<<< HEAD
     
       <CardsWrapper 
       tag="div" 
@@ -96,26 +101,35 @@ export default function Home ({ data }) {
       </Layout>
   ) 
 }
+=======
+      <Link
+      to={'/ranking'}
+      state={{mentor: true}}
+      onClick={saveToLocalStorage}>
+        I am mentee
+      </Link> <br/>
+      <Link
+      to={'/ranking'}
+      state={{mentor: false}}
+      onClick={saveToLocalStorage}>
+        I am mentor
+      </Link> <br/>
+      <form onSubmit={handleSubmit}>
+      <label>Please identify yourself with your email address, that you used for register to this event:
+      <input
+      type="email"
+      id="email"
+      required
+      value={userEmail}
+      onChange={e => setUserEmail(e.target.value)}
+      />
+      </label>
+        <button type="submit">Submit</button>
+      </form>
+      <div id="userNotFound"></div>
+>>>>>>> using-cvs-json-data
 
-export const pageQuery = graphql`
-        query {
-          dataQuery: allUserDataJson {
-            edges {
-              node {
-                id
-                title
-                name
-                avatar  {
-                  childImageSharp {
-                    fixed(width: 200, height: 200) {
-                      ...GatsbyImageSharpFixed
-                    }
-                  }
-                }
-                }
-              }
-            }
-         
-        }
-`
+    </Layout>
+  )
+}
 

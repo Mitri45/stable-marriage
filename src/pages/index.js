@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
-import Layout from "../components/Layout"
+import Layout from "../components/layout"
 import { navigate, useStaticQuery, graphql } from 'gatsby'
 import { authenticateUser } from "../utils/userAuthenticate"
 

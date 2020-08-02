@@ -82,7 +82,7 @@ export default function UserList({ location, data }) {
   let userData = []
   let currentUser = {}
     if (typeof window !== 'undefined') {
-      currentUser = window.history.state.validUser
+      currentUser = JSON.parse(localStorage.getItem('validUser'))
     }
     if (currentUser.userType === "mentor") {
       data.mentees.edges.map(el => userData.push(el.node))
@@ -135,8 +135,8 @@ useEffect(() => {
 
 // TODO - organizing and submitting results of raking to somewhere
 const submitResults = () => {
-
 }
+
   return (
     <Layout>
       <Container>

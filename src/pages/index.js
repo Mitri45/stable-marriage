@@ -20,11 +20,7 @@ export default function Home() {
   useEffect(() => {
     if (localStorage.getItem('validUser')) {
       const validUser = JSON.parse(localStorage.getItem('validUser'))
-      console.log(validUser)
-      navigate("/ranking",
-      {
-        state: { validUser },
-      })
+      navigate("/ranking")
     }
   });
 

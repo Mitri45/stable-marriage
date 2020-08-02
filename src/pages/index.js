@@ -1,54 +1,51 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import Layout from "../components/Layout"
-import { Link, navigate, useStaticQuery, graphql } from 'gatsby'
+import { navigate, useStaticQuery, graphql } from 'gatsby'
 import { authenticateUser } from "../utils/userAuthenticate"
 
-//Styles for the page
-
-const StyledHeader = styled.h1`
-    text-align: center;
-    font-size: 1.5rem;
+//Styles for the page 
+const Container = styled.div`
+    max-width: 80%;
+    margin: 10em auto;
 `
 
-
+//Main page component
 export default function Home() {
 
   const [userEmail, setUserEmail] = useState('')
-  const [user, setUser] = useState({mentor: ''})
-console.log(userEmail);
 
-// onClick event handler that stores user role to localStorage
-  const saveToLocalStorage = () => {
-    localStorage.setItem('userRole', JSON.stringify({mentor: true}))
-  }
-
-// If user role is in localStorage redirect to ranking page
+// If user role already is in localStorage redirect to ranking page to continue ranking
+// redirect also pass current user info inside location object
   useEffect(() => {
-    if (localStorage.getItem('userRole')) {
-      const userRole = JSON.parse(localStorage.getItem('userRole'))
+    if (localStorage.getItem('validUser')) {
+      const validUser = JSON.parse(localStorage.getItem('validUser'))
+      console.log(validUser)
       navigate("/ranking",
       {
-        state: { userRole },
+        state: { validUser },
       })
     }
   });
 
+// Pass entered email into helper function, if email in the JSON with users data
+// return object with current user data and pass it with redirect to ranking page, otherwise trigger error
 const handleSubmit = e => {
   e.preventDefault()
   const processedEmail = userEmail.trim().toLocaleLowerCase()
-  console.log(processedEmail)
   const validUser = authenticateUser(processedEmail, userAuthData)
   if (validUser) {
+    localStorage.setItem('validUser', JSON.stringify(validUser))
     navigate("/ranking",
     {
       state: { validUser },
     })
   } else {
-    document.getElementById("userNotFound").innerText = "User not found"
+    document.getElementById("userNotFound").innerText = "Please, check the spelling and try once again"
   }
 }
 
+//Query data for searching among that data entered email
 const userAuthData = useStaticQuery(graphql`
 query {
     mentees: allMenteesJson {
@@ -74,48 +71,9 @@ query {
 
   return (
     <Layout>
-      <StyledHeader>Hello world!</StyledHeader>
-<<<<<<< HEAD
-    
-      <CardsWrapper 
-      tag="div" 
-      list={state} 
-      setList={setState} 
-      swap 
-      swapClass={"sortable-swap-highlight"}>
-      {state.map((item, index) => (
-       <UserCard key={item.node.id}>
-       <StyledImg
-         fixed={item.node.avatar.childImageSharp.fixed}
-         alt="User avatar"
-       />
-       <UserName>{item.node.name}</UserName>
-       <UserTitle>{item.node.name}</UserTitle>
-       <UserRating>
-       <img src={reorderImg} alt="reorderList" />
-      <p>Rating is {index + 1}</p>
-       </UserRating>
-       </UserCard>
-      ))}
-       </CardsWrapper>
-      </Layout>
-  ) 
-}
-=======
-      <Link
-      to={'/ranking'}
-      state={{mentor: true}}
-      onClick={saveToLocalStorage}>
-        I am mentee
-      </Link> <br/>
-      <Link
-      to={'/ranking'}
-      state={{mentor: false}}
-      onClick={saveToLocalStorage}>
-        I am mentor
-      </Link> <br/>
+      <Container>
       <form onSubmit={handleSubmit}>
-      <label>Please identify yourself with your email address, that you used for register to this event:
+      <label>Please identify yourself with your email address, that you used for register to this event:<br/>
       <input
       type="email"
       id="email"
@@ -127,8 +85,7 @@ query {
         <button type="submit">Submit</button>
       </form>
       <div id="userNotFound"></div>
->>>>>>> using-cvs-json-data
-
+      </Container>
     </Layout>
   )
 }

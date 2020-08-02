@@ -17,6 +17,6 @@ export const authenticateUser = (email, users) => {
             return result
     }
     }
-// If our data lack of provided email return false
+// If no email found return false
     return false
     }

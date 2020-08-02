@@ -80,13 +80,14 @@ export default function UserList({ location, data }) {
 
 // Push data from GraphQL query to userData array according to current user state - mentor or mentee
   let userData = []
-  let currentUser = location.state.validUser
-  if (currentUser.userType === "mentor") {
-    data.mentees.edges.map(el => userData.push(el.node))
-  } else {
-    data.mentors.edges.map(el => userData.push(el.node))
+  if(location.state) {
+    let currentUser = location.state.validUser
+    if (currentUser.userType === "mentor") {
+      data.mentees.edges.map(el => userData.push(el.node))
+    } else {
+      data.mentors.edges.map(el => userData.push(el.node))
+    }
   }
-
 // Make this function stateful with React useState hook
 // If current user already have changed something in ranking list this info should be
 // in local storage. So we take it and make it our initial state by converting it to the object,

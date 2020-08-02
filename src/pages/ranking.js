@@ -90,6 +90,7 @@ export default function UserList({ location, data }) {
       data.mentors.edges.map(el => userData.push(el.node))
     }
 
+
 // Make this function stateful with React useState hook
 // If current user already have changed something in ranking list this info should be
 // in local storage. So we take it and make it our initial state by converting it to the object,
@@ -103,18 +104,6 @@ const [state, setState] = useState(() => {
   return userData
 }
 })
-
-//Using React useEffect hook with empty array as second param to store
-// users data from GraphQL query on initial render if there are no data in local storage
-useEffect(() => {
-    if (!localStorage.getItem(`${currentUser.userType}`)) {
-      let userDataToStore = []
-      userData.forEach(el => {
-      userDataToStore.push([["id", el.id], ["name", el.name], ["surname", el.surname], ["photo", el.photo]])
-      })
-      localStorage.setItem(`${currentUser.userType}`, JSON.stringify(userDataToStore))
-    }
-  }, [])
 
 //Every time moving/dragging triggered in the list - save current order to local storage
   const sortEvent = (el) => {

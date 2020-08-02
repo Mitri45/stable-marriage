@@ -32,10 +32,7 @@ const handleSubmit = e => {
   const validUser = authenticateUser(processedEmail, userAuthData)
   if (validUser) {
     localStorage.setItem('validUser', JSON.stringify(validUser))
-    navigate("/ranking",
-    {
-      state: { validUser },
-    })
+    navigate("/ranking")
   } else {
     document.getElementById("userNotFound").innerText = "Please, check the spelling and try once again"
   }

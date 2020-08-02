@@ -81,7 +81,9 @@ export default function UserList({ location, data }) {
 // Push data from GraphQL query to userData array according to current user state - mentor or mentee
   let userData = []
   let currentUser = {}
-    typeof window !== 'undefined' && (currentUser = window.history.state.validUser)
+    if (typeof window !== 'undefined') {
+      currentUser = window.history.state.validUser
+    }
     if (currentUser.userType === "mentor") {
       data.mentees.edges.map(el => userData.push(el.node))
     } else {

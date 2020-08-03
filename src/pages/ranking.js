@@ -76,7 +76,7 @@ const UserRating = styled.div`
 `
 
 // User list component accept location object with state info about current user and data from GraphQL query
-export default function UserList({ location, data }) {
+  export default function UserList({ location, data }) {
 
   let userData = []
   let currentUser = {}
@@ -91,18 +91,21 @@ export default function UserList({ location, data }) {
 // in local storage. So we take it and make it our initial state by converting it to the object,
 // otherwise use data from GraphQL initial query
 const [state, setState] = useState(() => {
-  if (typeof window !== 'undefined' && localStorage.getItem(`${currentUser.userType}`)) {
-    const localData = JSON.parse(localStorage.getItem(`${currentUser.userType}`))
-    const localDataToObject = localData.map(el => Object.fromEntries(el))
-    return localDataToObject
-  } else {
-  if (currentUser.userType === "mentor") {
-      data.mentees.edges.map(el => userData.push(el.node))
-    } else {
-      data.mentors.edges.map(el => userData.push(el.node))
+  if (typeof window !== 'undefined') {
+    if (localStorage.getItem(currentUser.userType)) {
+      const localData = JSON.parse(localStorage.getItem(currentUser.userType))
+      const localDataToObject = localData.map(el => Object.fromEntries(el))
+      return localDataToObject
     }
+  } else {
     return userData
-}
+  }
+  if (currentUser.userType === "mentor") {
+    data.mentees.edges.map(el => userData.push(el.node))
+  } else {
+    data.mentors.edges.map(el => userData.push(el.node))
+  }
+return userData
 })
 
 //Every time moving/dragging triggered in the list - save current order to local storage
@@ -125,7 +128,6 @@ const [state, setState] = useState(() => {
 // TODO - organizing and submitting results of raking to somewhere
 const submitResults = () => {
 }
-
   return (
     <Layout>
       <Container>
@@ -142,7 +144,7 @@ const submitResults = () => {
               <UserRating>
                 <p className="user-rating">{index + 1}</p>
               </UserRating>
-              {item.photo === "" ? <StyledImg src={userAvatar} alt="User avatar" /> : <StyledImg src={item.photo} alt="User avatar" />}
+              {item.photo == "" ? <StyledImg src={userAvatar} alt="User avatar" /> : <StyledImg src={item.photo} alt="User avatar" />}
               <UserName>{`${capitalizeFirstLetter(item.name)} ${capitalizeFirstLetter(item.surname)}`}</UserName>
               <Hamburger src={reorderImg} alt="reorderList" />
             </UserCard>

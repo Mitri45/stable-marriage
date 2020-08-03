@@ -64,7 +64,7 @@ query {
   return (
     <Layout>
       <Container>
-      <form id="email" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
       <label>Please identify yourself with your email address, that you used for register to this event:<br/>
       <input
       name="email"

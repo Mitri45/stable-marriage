@@ -6,8 +6,11 @@ import { authenticateUser } from "../utils/userAuthenticate"
 
 //Styles for the page 
 const Container = styled.div`
-    max-width: 80%;
-    margin: 10em auto;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 1.3em;
 `
 
 //Main page component
@@ -64,8 +67,8 @@ query {
   return (
     <Layout>
       <Container>
-      <form onSubmit={handleSubmit}>
-      <label>Please identify yourself with your email address, that you used for register to this event:<br/>
+      <form onSubmit={handleSubmit} >
+      <label>Please identify yourself with your email address, that you used for register to this event: <br />
       <input
       name="email"
       type="email"
@@ -73,11 +76,12 @@ query {
       required
       value={userEmail}
       onChange={e => setUserEmail(e.target.value)}
+      style={{ fontSize:"1.3rem", padding:"1rem", marginTop:"1rem" }}
       />
       </label>
-        <button type="submit">Submit</button>
+        <button type="submit" style={{ fontSize:"1.3rem", padding:"1rem"}}>Submit</button>
+        <span id="userNotFound" style={{ marginLeft:"1rem", fontStyle:"italic", color:"white"}}></span>
       </form>
-      <div id="userNotFound"></div>
       </Container>
     </Layout>
   )

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import Layout from "../components/layout"
 import { graphql, Link } from 'gatsby'
@@ -78,17 +78,12 @@ const UserRating = styled.div`
 // User list component accept location object with state info about current user and data from GraphQL query
 export default function UserList({ location, data }) {
 
-// Push data from GraphQL query to userData array according to current user state - mentor or mentee
   let userData = []
   let currentUser = {}
-    if (typeof window !== 'undefined') {
-      currentUser = JSON.parse(localStorage.getItem('validUser'))
-    }
-    if (currentUser.userType === "mentor") {
-      data.mentees.edges.map(el => userData.push(el.node))
-    } else {
-      data.mentors.edges.map(el => userData.push(el.node))
-    }
+
+  if (typeof window !== 'undefined') {
+    currentUser = JSON.parse(localStorage.getItem('validUser'))
+  }
 
 
 // Make this function stateful with React useState hook
@@ -101,7 +96,12 @@ const [state, setState] = useState(() => {
     const localDataToObject = localData.map(el => Object.fromEntries(el))
     return localDataToObject
   } else {
-  return userData
+  if (currentUser.userType === "mentor") {
+      data.mentees.edges.map(el => userData.push(el.node))
+    } else {
+      data.mentors.edges.map(el => userData.push(el.node))
+    }
+    return userData
 }
 })
 

@@ -19,7 +19,6 @@ export default function Home() {
 // redirect also pass current user info inside location object
   useEffect(() => {
     if (localStorage.getItem('validUser')) {
-      const validUser = JSON.parse(localStorage.getItem('validUser'))
       navigate("/ranking")
     }
   });
@@ -65,9 +64,10 @@ query {
   return (
     <Layout>
       <Container>
-      <form onSubmit={handleSubmit}>
+      <form id="email" onSubmit={handleSubmit}>
       <label>Please identify yourself with your email address, that you used for register to this event:<br/>
       <input
+      name="email"
       type="email"
       id="email"
       required
